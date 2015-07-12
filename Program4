@@ -4,19 +4,17 @@
  *  Written By   : Branden Wagner
  *  Date Written : 07/05/15
  *  Purpose      : Program 4
- *                  Fill an array with a plaintext dictionary input file.
- *                  Use this dictionary array in a recursive binary search through
- *                  an input file oliver.txt, then output data on: words found,                     
- *                  mispelled, recursive steps, and average recursive steps.
+ *                  Use a random order plaintext dictionary input file to fill 
+ *                  an array with custom singly-linked list objects. 
+ *                  Use linked list array to spellcheck an input file 
+ *                  oliver.txt, then output data on: words found,                     
+ *                  mispelled, and average comparisons to find words.
  *  
  */
 package program4;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
+
 
 /**
  *
@@ -25,22 +23,15 @@ import java.util.ArrayList;
 public class Program4 {
 
     /**
-     * integer to keep track of the total number of iterations required to find
-     * a word
+     * long to keep track of the total comparisons made to find correctly 
+     * spelled words
      */
-    public static int searchSteps = 0;
+    protected static long correctComp = 0;
 
     /**
-     * integer to keep track of the overall total of binary steps taken to find
-     * words in dictionary
+     * long to keep track of the total comparisons for incorrectly spelled words
      */
-    public static int correctSteps = 0;
-
-    /**
-     * integer to keep track of the recursive steps taken to confirm not in
-     * dictionary (misspelled word)
-     */
-    public static int incSteps = 0;
+    protected static long incorrectComp = 0;
 
     /**
      * integer to keep track of the total words found in the input file,
@@ -69,22 +60,23 @@ public class Program4 {
         Program4 nonStatic = new Program4();
         // Create dictionary
         BufferedReader reader = null;
-        //int dictLength = 0; //dictionary word counter
-        //ArrayList<LinkedList<String>> dict = new ArrayList(26); //dictionary array
-        //LinkedList<String> dictionary = new LinkedList(); 
-        MyLinkedList[] dictionary = new MyLinkedList[26];
-        for(int i = 0 ; i< dictionary.length; i++) dictionary[i] = new MyLinkedList<String>();
 
+
+        MyLinkedList[] dictionary = new MyLinkedList[26];
+        for (int i = 0; i < dictionary.length; i++) {
+        dictionary[i] = new MyLinkedList<>();
+        }
+        
         try {
-            //changing to buffered reader from Scanner changed runtime to 6 seconds from 7    
+            //changed from Scanner to Buffered Reader    
             reader = new BufferedReader(new FileReader("random_dictionary.txt"));
-            String word = "";
-             //read file and add words to array
+            String word;
+            //read file and add words to array
             while ((word = reader.readLine()) != null) {
-               
-                word = word.toLowerCase();                                               
+
+                word = word.toLowerCase();
                 //add to array based on first letter of the word
-                int indexByLet = word.charAt(0)-97; //int value of character to index
+                int indexByLet = word.charAt(0) - 97; //int value of character to index
                 dictionary[indexByLet].add(word);
             }//while
 
@@ -93,65 +85,43 @@ public class Program4 {
 
         }//try
         catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Cannot Access File.");
         } // catch io exception
-        finally {
-            try {
-                if (null != reader) {
-                    reader.close();
-                }
-            }//try close source
-            catch (IOException e) {
-                e.printStackTrace();
-            }//catch io exception
-        }//finally
-
 
         /* File is read character at a time. Then the characters are
-
          * concatenated to form a word. The words only contains alphabetical
-
          * characters. When a hyphan or a whitespace is reached, characters
-
          * preceding the hyphan is processed as a word.
-
          */
         try {
-            //changing from filereader and fileinputstream to bufferedreader and filereader saved around 4 seconds
+            //changed from filereader and fileinputstream to bufferedreader and filereader
             BufferedReader inf = new BufferedReader(new FileReader("oliver.txt"));
-
             char let;
-
             String str = ""; //word to be processed
-
-            int n = 0;
+            int n;
 
             while ((n = inf.read()) != -1) {
 
                 let = (char) n;
-
                 if (Character.isLetter(let)) {
                     str += Character.toLowerCase(let);
 
                 }//if character add to word
 
                 if ((Character.isWhitespace(let) || let == '-') && !str.isEmpty()) {
-
-                    if (dictionary[str.charAt(0)-97].contains(str)) {
-                        correctSteps ++;
+                    //determine if the linked list array contains the string and increment counters
+                    long comps = dictionary[str.charAt(0) - 97].containsCount(str);
+                    if (comps < dictionary[str.charAt(0) - 97].size) {
+                        correctComp += comps;
                         totalWords++;
                         correctWords++;
                     } else {
+                        incorrectComp += comps;
                         totalWords++;
-                        incSteps ++;
-
                     }
-
                     //insert word to a data structure here
                     str = "";
-
                 }//if 
-
             }//while read
 
             inf.close();
@@ -159,66 +129,27 @@ public class Program4 {
             nonStatic.outputData();
 
         } catch (IOException e) {
-
-            e.printStackTrace();
-
+            System.out.println("Cannot Access File.");
         }//catch
-
     }//main
 
     /**
-     *
-     * @param dict String array containing the dictionary to be used
-     * @param toFind String to search the dictionary
-     * @param lowInd integer representing the lowest position to search, used to
-     * find mid
-     * @param highInd integer representing the highest position to search, used
-     * to find mid
-     * @ensures boolean return corresponding with spelled or misspelled word
-     * count, correct words, and steps are tracked
-     * @return boolean true if the word is found in dict, false if the word is
-     * not in dict
-     */
-    public boolean dictSearch(String[] dict, String toFind, int lowInd, int highInd) {
-        int midIndex = (lowInd + highInd) / 2;
-        if (highInd < lowInd) {  //mispelled          
-            totalWords++;
-            return false;
-        }//if cannot be found
-
-        if (dict[midIndex].equals(toFind)) { //correct word found
-            totalWords++;
-            correctWords++;
-            return true;
-        } else if (toFind.compareTo(dict[midIndex]) < 0) { //binary search back
-            searchSteps++;
-            return dictSearch(dict, toFind, lowInd, midIndex - 1);
-        } else {//binary search forward
-            searchSteps++;
-            return dictSearch(dict, toFind, midIndex + 1, highInd);
-        }//else greater
-
-    }//dictSearch
-
-    /**
      * @args none
-     * @ensures Output of all counters and calculated averages Misspelled words
-     * are derived from (total words-correct words)
+     * @ensures Output of all counters and calculated averages. 
+     * Misspelled words are derived from (total words-correct words)
      */
     public void outputData() {
-        int avgCorrect = 0; //average number of comparisons to find a correct word
-        int avgIncorrect = 0; //average number of comparisons to determine mispelled
+        double avgCorrect = 0.0; //average number of comparisons to find a correct word
+        double avgIncorrect = 0.0; //average number of comparisons to determine mispelled
         if (correctWords > 0) {
-            avgCorrect = correctSteps / correctWords;
-            avgIncorrect = incSteps / (totalWords - correctWords);
+            avgCorrect = correctComp / correctWords;
+            avgIncorrect = incorrectComp / (totalWords - correctWords);
         }
         //Output
-        System.out.println("Average recursions to find: " + avgCorrect + "\n  Total Correct: " + correctWords);
-        System.out.println("Average recursions for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (totalWords - correctWords));
+        System.out.println("Average comparisons to find: " + avgCorrect + "\n  Total Correct: " + correctWords);
+        System.out.println("Average comparisons for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (totalWords - correctWords));
         System.out.println("Total words: " + totalWords);
     }//outputData
-
-
 
 }//class Program4
 
@@ -226,8 +157,8 @@ public class Program4 {
 /*
 
  ********=OUTPUT=********
-Dictionary in Array of Strings
-run:
+ Dictionary in Array of Strings, Binary Recursive search
+ run:
  Average recursions to find: 15
  Total Correct: 895738
  Average recursions for mispelled: 17
@@ -237,20 +168,21 @@ run:
 
  ********=OUTPUT=********
  Dictionary in Java's Linked List
- run:
- Average recursions to find: 0
- Total Correct: 0
- Average recursions for mispelled: 0
- Total Mispelled: 0
- Total words: 0
- BUILD SUCCESSFUL (total time: 8 minutes 48 seconds)
+run:
+Average comparisons to find: 0.0
+  Total Correct: 937492
+Average comparisons for mispelled: 0.0
+  Total Mispelled: 54648
+Total words: 992140
+BUILD SUCCESSFUL (total time: 20 seconds)
+
 
  ********=OUTPUT=********
-Dictionary in Array of Custom LinkedLists
+ Dictionary in Array of Custom LinkedLists
 run:
-Average recursions to find: 1
+Average comparisons to find: 3559.0
   Total Correct: 937484
-Average recursions for mispelled: 1
+Average comparisons for mispelled: 7381.0
   Total Mispelled: 54656
 Total words: 992140
 BUILD SUCCESSFUL (total time: 20 seconds)
