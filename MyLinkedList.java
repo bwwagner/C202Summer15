@@ -1,13 +1,18 @@
 /*
  *  C202/I211 Summer 2015
  *  Lab6.java
- *  Written By   : Branden Wagner
+ *  Written By   : Branden Wagner and Tim McEndoo
  *  Date Written : 07/04/15
- *  Purpose      : Lab 6                   
+ *  Purpose      : Program 4 and Lab 6                 
  *                 Custom class for a singly-linked list. 
  */
-package lab6;
+package program4;
 
+/**
+ *
+ * @author Branden Wagner
+ * @param <E>
+ */
 public class MyLinkedList<E> extends MyAbstractList<E> {
 
     private Node<E> head, tail;
@@ -20,6 +25,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Create a list from an array of objects
+     * @param objects generic type to be 
      */
     public MyLinkedList(E[] objects) {
         super(objects);
@@ -27,6 +33,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Return the head element in the list
+     * @return the generic object in the first position of the list
      */
     public E getFirst() {
         if (size == 0) {
@@ -38,6 +45,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Return the last element in the list
+     * @return the generic object in the last position of the list
      */
     public E getLast() {
         if (size == 0) {
@@ -49,6 +57,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Add an element to the beginning of the list
+     * @param e generic object to be added to the first position of the list
      */
     public void addFirst(E e) {
         Node<E> newNode = new Node<E>(e); // Create a new node
@@ -65,6 +74,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Add an element to the end of the list
+     * @param e generic object to be added to the last position of the list
      */
     public void addLast(E e) {
         Node<E> newNode = new Node<E>(e); // Create a new for element e
@@ -80,6 +90,8 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     /**
      * Add a new element at the specified index in this list The index of the
      * head element is 0
+     * @param index int index of the position to be changed
+     * @param e generic object to be added to the specified position in the list
      */
     public void add(int index, E e) {
         if (index == 0) {
@@ -102,6 +114,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     /**
      * Remove the head node and return the object that is contained in the
      * removed node.
+     * @return generic object contained by the node which was removed
      */
     public E removeFirst() {
         if (size == 0) {
@@ -120,6 +133,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     /**
      * Remove the last node and return the object that is contained in the
      * removed node.
+     * @return generic object contained by the node which was removed
      */
     public E removeLast() {
         if (size == 0) {
@@ -145,6 +159,8 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     /**
      * Remove the element at the specified position in this list. Return the
      * element that was removed from the list.
+     * @param index int index of the node to be removed from the list
+     * @return generic object contained by the node which was removed
      */
     public E remove(int index) {
         if (index < 0 || index >= size) {
@@ -167,6 +183,7 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Override toString() to return elements in the list
+     * @return String representation of all elements currently in the list
      */
     public String toString() {
         StringBuilder result = new StringBuilder("[");
@@ -191,11 +208,11 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     }
 
     /**
-     * methods for lab 8 should be implemented here
-     */
-    /**
      * Replace the element at the specified position in this list with the
      * specified element and returns the new set.
+     * @param index int index in the list to be replaced
+     * @param e generic object to replace the data at index
+     * @return 
      */
     public E set(int index, E e) {
         Node<E> temp = head;
@@ -222,6 +239,8 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     /**
      * Return the index of the last matching element in this list Return -1 if
      * no match.
+     * @param e generic object to be found in the list
+     * @return int index of the last occurence of the object in the data structure
      */
     public int lastIndexOf(E e) {
         int index = 0;
@@ -240,6 +259,8 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
     /**
      * Return the index of the first matching element in this list. Return -1 if
      * no match.
+     * @param e generic object to be found in the list
+     * @return int index of the first match within the list
      */
     public int indexOf(E e) {
         int index = 0;
@@ -263,6 +284,8 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Return the element from this list at the specified index
+     * @param index index of the list with data to be returned
+     * @return the element from this list at the specified index
      */
     public E get(int index) {
         if (index < 0 || index >= size) {
@@ -282,6 +305,8 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
 
     /**
      * Return true if this list contains the element
+     * @param e generic object to be found in the list
+     * @return true if this list contains the element, otherwise false
      */
     public boolean contains(E e) {
         Node<E> previous = head;
@@ -293,6 +318,24 @@ public class MyLinkedList<E> extends MyAbstractList<E> {
         }//for
         return false;
     }//contains
+
+    /**
+     *
+     * @param e generic object to be found in the list
+     * @return long number of comparisons made to find the object
+     */
+    public long containsCount(E e) {
+        Node<E> previous = head;
+        long count = 0;
+        while (previous!=null) {
+            count++;
+            if (previous.element.equals(e)) {
+                return count;
+            }
+            previous = previous.next;
+        }//while
+        return count;
+    }//contains    
 
     private static class Node<E> {
 
