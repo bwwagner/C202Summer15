@@ -1,0 +1,101 @@
+package lab8;
+
+/* Branden Wagner*/
+
+
+/* Implements a FIFO-Priority Queue using two LIFO Stacks.
+ * offer: add an element to this queue, return true if element is added successfully, return false otherwise
+ * priorityPoll: removes and returns the element with the highest priority.
+ * elementPoll:  removes and returns the element at the front of the queue.
+ * peek: returns the element at the front of the queue.              
+ */
+
+import java.util.*;
+
+public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this line
+    
+    /* Two LIFO Stacks to act as the container of this BinaryPollQueue. DO NOT CHANGE!!! */
+    private Stack<E> stk1;
+    private Stack<E> stk2;
+
+    //add an element to this queue, return true if element is added successfully, return false otherwise
+    public boolean offer(E element){
+      //boolean added = false;
+      if (stk1.empty()) {
+          stk1.push(element);
+          return true;
+      }
+      else{
+        while (!stk1.empty()){
+            stk2.push(stk1.pop());
+        }//while stk1
+        //add element to the top of stack 2
+        stk2.push(element);
+        
+        while (!stk2.empty()){ //restore the queue
+            stk1.push(stk2.pop());
+            return true;
+        }//while stk2  
+      }//else
+      return false;
+    }//offer
+    
+    
+    //removes and returns the element with the highest priority.
+    public E priorityPoll(){
+        if (stk1.empty()) return null;
+        else{
+        int highest = -1;  //highest priority found
+        E element = null;  //element with highest priority  
+        
+        while (!stk1.empty()){
+            stk2.push(stk1.pop());
+            /*if (stk2.peek().priority > highest) {
+            highest = stk2.peek().priority;
+            element = stk2.peek();
+            }*/
+        }//while stk1
+        
+        while (!stk2.empty()){ //restore the queue
+            stk1.push(stk2.pop());           
+        }//while stk2
+        }//else
+        return element;
+    }
+    
+    
+    //removes and returns the element at the front of the queue.
+    public E elementPoll(){
+        E element;
+        if (stk1.empty()) return null;
+        else{
+        while (!stk1.empty()){
+            stk2.push(stk1.pop());
+        }//while stk1
+        element = stk2.peek();
+        while (!stk2.empty()){ //restore the queue
+            stk1.push(stk2.pop());
+            
+        }//while stk2
+        }//else
+        return element;
+    }
+    
+    //returns the element at the front of the queue.
+    public E peek(){
+        E element=stk1.firstElement();  
+        if (stk1.empty()) return null;
+        else{
+        while (!stk1.empty()){
+            stk2.push(stk1.pop());            
+        }//while stk1
+        element = stk2.peek();
+        while (!stk2.empty()){ //restore the queue
+            stk1.push(stk2.pop());            
+        }//while stk2
+        }//else
+        
+        return element;
+    }//peek
+    
+}//BinaryPollQueue
