@@ -103,7 +103,7 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
 }//BinaryPollQueue
 
 /*
-Not sure why stk1.push(); is throwing a NullPointerException
+Not sure why stk1.isEmpty(); is throwing a NullPointerException
 
 run:
 Exception in thread "main" java.lang.NullPointerException
