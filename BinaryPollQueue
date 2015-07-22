@@ -15,9 +15,15 @@ import java.util.*;
 public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this line
     
     /* Two LIFO Stacks to act as the container of this BinaryPollQueue. DO NOT CHANGE!!! */
-    private Stack<E> stk1;
-    private Stack<E> stk2;
-
+    private Stack<E> stk1 = new Stack<>();
+    private Stack<E> stk2 = new Stack<>();
+    
+    public BinaryPollQueue(){
+       //Stack<E> stk1 = new Stack<>();
+       //Stack<E> stk2 = new Stack<>();
+        
+    }//default constructor
+    
     //add an element to this queue, return true if element is added successfully, return false otherwise
     public boolean offer(E element){
       //boolean added = false;
@@ -29,6 +35,7 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
           while (!stk1.empty()){
           stk2.push(stk1.pop());
           }//while stk1
+          
           //add element to the top of stack 2
           stk2.push(element);
           
@@ -42,11 +49,12 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
     
     //removes and returns the element with the highest priority.
     public E priorityPoll(){
-        E element = null;  //element with highest priority
+        
         if (stk1.empty()) return null;
+        
         else{
-        //int highest = -1;  //highest priority found
-          
+        E element=stk1.peek();  //element with highest priority
+        //int highest = -1;  //highest priority found          
         
         while (!stk1.empty()){
             stk2.push(stk1.pop());
@@ -59,17 +67,19 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
         }//while stk1
         
         while (!stk2.empty()){ //restore the queue
-            stk1.push(stk2.pop());           
+            if (stk2.peek().compareTo(element)== 0) stk2.pop();
+            else stk1.push(stk2.pop());           
         }//while stk2
-        }//else
         return element;
+        }//else
+        
     }//prorityPoll
     
     
     //removes and returns the element at the front of the queue.
     public E elementPoll(){
         E element;
-        if (stk1.empty()) return null;
+        if (stk1.isEmpty()) return null;
         else{
         while (!stk1.empty()){
             stk2.push(stk1.pop());
@@ -86,7 +96,7 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
     //returns the element at the front of the queue.
     public E peek(){
         E element=null;  
-        if (stk1.empty()) return null;
+        if (stk1.isEmpty()) return null;
         else{
         while (!stk1.empty()){
             stk2.push(stk1.pop());            
@@ -103,13 +113,16 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
 }//BinaryPollQueue
 
 /*
-Not sure why stk1.isEmpty(); is throwing a NullPointerException
-
 run:
-Exception in thread "main" java.lang.NullPointerException
-	at lab8.BinaryPollQueue.offer(BinaryPollQueue.java:24)
-	at lab8.TestBinaryPollQueue.main(TestBinaryPollQueue.java:8)
-Java Result: 1
+Front Element  <f,1> 
+Removed Highest Priority <e,5> 
+Front Element  <f,1> 
+Removed Front <f,1> 
+
+Front Element  <j,4> 
+Removed Front <j,4> 
+Removed Highest Priority <h,7> 
+
 BUILD SUCCESSFUL (total time: 0 seconds)
 
 */
