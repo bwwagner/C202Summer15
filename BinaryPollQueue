@@ -15,12 +15,12 @@ import java.util.*;
 public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this line
     
     /* Two LIFO Stacks to act as the container of this BinaryPollQueue. DO NOT CHANGE!!! */
-    private Stack<E> stk1 = new Stack<>();
-    private Stack<E> stk2 = new Stack<>();
+    private Stack<E> stk1 ;
+    private Stack<E> stk2 ;
     
     public BinaryPollQueue(){
-       //Stack<E> stk1 = new Stack<>();
-       //Stack<E> stk2 = new Stack<>();
+       stk1 = new Stack<>();
+       stk2 = new Stack<>();
         
     }//default constructor
     
@@ -29,7 +29,7 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
       //boolean added = false;
         if (stk1.empty()) {
           stk1.push(element);
-          return true;
+          
           }
         else{
           while (!stk1.empty()){
@@ -42,8 +42,9 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
           while (!stk2.empty()){ //restore the queue
           stk1.push(stk2.pop());
           }//while stk2
-          return true;
+          
           }//else
+          return true;
     }//offer
     
     
@@ -84,7 +85,7 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
         while (!stk1.empty()){
             stk2.push(stk1.pop());
         }//while stk1
-        element = stk2.peek();
+        element = stk2.pop();
         while (!stk2.empty()){ //restore the queue
             stk1.push(stk2.pop());
             
