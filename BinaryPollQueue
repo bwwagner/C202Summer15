@@ -1,6 +1,6 @@
 package lab8;
 
-/* Branden Wagner*/
+/* Branden Wagner and Tim McEndoo*/
 
 
 /* Implements a FIFO-Priority Queue using two LIFO Stacks.
@@ -114,6 +114,8 @@ public class BinaryPollQueue<E extends Comparable<E>> { // Do not change this li
 }//BinaryPollQueue
 
 /*
+
+OUTPUT
 run:
 Front Element  <f,1> 
 Removed Highest Priority <e,5> 
