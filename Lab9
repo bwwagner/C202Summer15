@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import javafx.geometry.Point2D;
 
 /**
@@ -51,13 +51,15 @@ public class Lab9 extends Application {
     
     double xMid = (x1+x2)/2;
     double yMid = (y1+y2)/2;
-    Text t = new Text(xMid,yMid);
     
-    Point2D p = (new Point2D(x1,y1).distance(x2,y2)+ "");
+    
+    Point2D p = new Point2D(xMid,yMid);
+    Text t = new Text(xMid,yMid,p.distance(x1,y1)+"");
+    
     
     // Create a pane to hold the circle 
     Pane pane = new Pane();
-    pane.getChildren().addAll(circle1,circle2,l,t,p);
+    pane.getChildren().addAll(circle1,circle2,l,t);
     
     // Create a scene and place it in the stage
     Scene scene = new Scene(pane, 250, 250);
