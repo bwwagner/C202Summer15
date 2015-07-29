@@ -1,0 +1,249 @@
+package program5;
+
+/**
+ *
+ * @author Timothy
+ */
+import java.util.Scanner;
+import java.io.*;
+
+/*
+ *  C202/I211 Summer 2015
+ *  Program5.java
+ *  Written By   : Branden Wagner and Tim McEndoo
+ *  Date Written : 07/21/2015	
+ *  Purpose      : Program 5
+ *                  Use a random order plaintext dictionary input file to fill 
+ *                  an array with custom singly-linked list objects. 
+ *                  Use a binarySearchTree to spellcheck an input file 
+ *                  oliver.txt, then output data on: words found,                     
+ *                  mispelled, and average comparisons to find words.
+ *  
+ */
+public class Program5 {
+
+    /**
+     * long to keep track of the total comparisons made to find correctly
+     * spelled words
+     */
+    protected static long correctComp = 0;
+
+    /**
+     * long to keep track of the total comparisons for incorrectly spelled words
+     */
+    protected static long incorrectComp = 0;
+
+    /**
+     * integer to keep track of the total words found in the input file,
+     * oliver.txt
+     */
+    public static int totalWords = 0;
+
+    /**
+     * integer to keep track of the number of correctly spelled words
+     */
+    public static int correctWords = 0;
+
+    /**
+     * Default constructor, no arguments
+     */
+    public Program5() {
+
+    }//no args constructor
+
+    /**
+ * @args none
+ * @ensures Output of all counters and calculated averages. Misspelled words are
+ * derived from (total words-correct words)
+ */
+public static void outputData() {
+                double avgCorrect = 0.0; //average number of comparisons to find a correct word
+                double avgIncorrect = 0.0; //average number of comparisons to determine mispelled
+                if (correctWords > 0) {
+                    avgCorrect = correctComp / correctWords;
+                    avgIncorrect = incorrectComp / (totalWords - correctWords);
+                }
+                //Output
+                System.out.println("Average comparisons to find: " + avgCorrect + "\n  Total Correct: " + correctWords);
+                System.out.println("Average comparisons for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (totalWords - correctWords));
+                System.out.println("Total words: " + totalWords);
+            }//outputData
+
+    
+    
+    
+    
+    
+    /**
+     * @param args none
+     * @requires access to the source directory and the dictionary in plaintext
+     * with one word per line
+     */
+    public static void main(String[] args) throws IOException {
+        Program5 nonStatic = new Program5();
+        String inputfile = "";
+        BinarySearchTree bTree = new BinarySearchTree();
+        BufferedReader reader = null;
+
+        try {
+            //changed from Scanner to Buffered Reader    
+            reader = new BufferedReader(new FileReader("random_dictionary.txt"));
+            String word;
+            //read file and add words to array
+            while ((word = reader.readLine()) != null) {
+
+                word = word.toLowerCase();
+                //add to array based on first letter of the word
+                int indexByLet = word.charAt(0) - 97; //int value of character to index
+                bTree[indexByLet].add(word);
+            }//while
+
+            //end dictionary creation
+            reader.close();
+
+        }//try
+        catch (IOException e) {
+            System.out.println("Cannot Access File.");
+        } // catch io exception
+
+        /* File is read character at a time. Then the characters are
+         * concatenated to form a word. The words only contains alphabetical
+         * characters. When a hyphan or a whitespace is reached, characters
+         * preceding the hyphan is processed as a word.
+         */
+        try {
+            //changed from filereader and fileinputstream to bufferedreader and filereader
+            BufferedReader inf = new BufferedReader(new FileReader("oliver.txt"));
+            char let;
+            String str = ""; //word to be processed
+            int n;
+
+            while ((n = inf.read()) != -1) {
+
+                let = (char) n;
+                if (Character.isLetter(let)) {
+                    str += Character.toLowerCase(let);
+
+                }//if character add to word
+
+                if ((Character.isWhitespace(let) || let == '-') && !str.isEmpty()) {
+                    //determine if the linked list array contains the string and increment counters
+                    long comps = bTree[str.charAt(0) - 97].containsCount(str);
+                    if (comps < bTree[str.charAt(0) - 97].size) {
+                        correctComp += comps;
+                        totalWords++;
+                        correctWords++;
+                    } else {
+                        incorrectComp += comps;
+                        totalWords++;
+                    }
+                    //insert word to a data structure here
+                    str = "";
+                }//if 
+            }//while read
+
+            inf.close();
+            //Output counters with labels
+            nonStatic.outputData();
+
+        } catch (IOException e) {
+            System.out.println("Cannot Access File.");
+        }//catch
+    }//main
+    
+ }//class Program5    
+
+    public class binaryTreeNode {
+
+        protected String data;
+        protected binaryTreeNode left, right;
+
+        public binaryTreeNode() {
+            left = null;
+            right = null;
+        }
+
+        public binaryTreeNode(String data) {
+            this(data, null, null);
+        }
+
+        public binaryTreeNode(String data, binaryTreeNode lt, binaryTreeNode rt) {
+            this.data = data;
+            left = lt;
+            right = rt;
+        }
+
+        public class binarySTree {
+
+            protected binaryTreeNode root = null;
+
+            public binarySTree() {
+
+            }
+
+            public void clear() {
+                root = null;
+            }
+
+            public boolean isEmpty() {
+                return root == null;
+            }
+
+            public void insert(String data) {
+                binarySTree t = root;
+                temp t = next;
+                while (t != null) {
+                    if (t.data.compareTo(data) < 0) {
+                        t = t.right;
+                    } else {
+                        t = t.left;
+                    }
+                }
+                if (root == null) {
+                    root = new binaryTreeNode(data);
+                } else if (t.data.compareTo(data) < 0) {
+                    t.right = new binaryTreeNode(data);
+                } else {
+                    t.left = new binaryTreeNode(data);
+                }
+                    
+
+                
+
+            public void inorder() {
+                inorder(root);
+            }
+
+            private void inorder(binaryTreeNode t) {
+                if (t != null) {
+                    inorder(t.left);
+                    System.out.print(t.data + " ");
+                    inorder(t.right);
+                }
+            }
+
+            public void bFrist() {
+                binaryTreeNode t = root;
+                Queue queue = new Queue();
+                if (t != null) {
+                    queue.enqueue(t);
+                    while (isEmpty()) {
+                        t = t.hasNext();
+                        System.out.println(t.data + " ");
+                        if (t.left != null) {
+                            queue.enqueue(t.left);
+                        }
+                        if (t.right != null) {
+                            queue.enqueue(t.right);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+   
+
+
