@@ -1,3 +1,9 @@
+Programming Assignment IV
+Extended Abstract
+Branden Wagner, CSCI-C202
+07/12/15
+
+
         In Java, a linked list is a sequential collection of objects where each object has a reference to the next object in the list.  This data structure is very useful, but it does have limitations.  We tested the performance of a linked list structure in the common task of spellchecking, which requires that random elements in the list be accessed. We found that the linked list was significantly less efficient at this task than a binary search of an array. Two plaintext files were used, the first was a dictionary and the second was the text to be checked.
         The dictionary text file contained 134,173 lines with one word each, in a random order.  The second file, Oliver.txt, was a copy of The Project Gutenberg EBook of The Complete PG Works of O. W. Holmes, Sr. This file was approximately 992,130 words in length and about 5.5 MB in size.  Linear comparisons between the two files could result in thousands of comparisons, the majority of which would be irrelevant, opposed to a binary search algorithm which would make an average of 9 comparisons.
         The search algorithm we implemented was a linear search of the linked list, due to the limitations of the data structure. The single reference nodes that compose a linked list do not lend themselves to a binary search as each node can only compare itself to its neighbors.  This means that even if we were to use indices to search the array, we are still limited by the need to linearly search through the list to find that position. 
