@@ -8,7 +8,7 @@
  *                 (Move the ball) Write a program that moves the ball in a pane. 
  *                  You should define a pane class for displaying the ball and 
  *                  provide the methods for moving the ball left, right, up, and
- *                  down, as shown in Figure 15.24c. Check the boundary
+ *                  down, as shown in Figure 15.24c. Check the boundary
  *                  to prevent the ball from moving out of sight completely.
  *  
  */
@@ -43,4 +43,41 @@ import javafx.util.Duration;
             animation.setCycleCount(Timeline.INDEFINITE);
             animation.play(); // Start animation
         }
-    }
+
+	public void play(){
+	animation.play();
+    	}
+
+	public void pause(){
+	animation.pause();
+	}
+
+	public void increaseSpeed(){
+	animation.setRate(animation.getRate() + 0.1);
+	}
+
+	public void decreaseSpeed(){
+	animation.getRate() > 0 ? animation.getRate() - 0.1 : 0);
+	}
+
+	public DoubleProperty rateProperty(){
+	return animation.rateProperty();
+	}
+
+	public void moveBall(){
+	//check boundaries
+	if (x < radius || x > getWidth() - radius) {
+		dx *= -1; //reverse direction
+	}
+	if (y < radius || y > getHeight() - radius) {
+		dy *= -1; //reverse direction
+	}
+
+	//Adjust ball position
+	x += dx;
+	y += dy;
+	circle.setCenterX(x);
+	circle.setCenterY(y);
+	}
+
+}
