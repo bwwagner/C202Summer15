@@ -16,7 +16,6 @@
 package lab10;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -38,9 +37,10 @@ import javafx.beans.property.DoubleProperty;
         private Timeline animation;
 
         public BallPane() {
-            circle.setFill(Color.GREEN); // Set ball color
+        // Set ball color
+            circle.setFill(Color.ROYALBLUE); 
             getChildren().add(circle); // Place a ball into this pane
-    // Create an animation for moving the ball
+        // Create an animation for moving the ball
             animation = new Timeline(new KeyFrame(Duration.millis(50), e -> moveBall()));
             animation.setCycleCount(Timeline.INDEFINITE);
             animation.play(); // Start animation
@@ -51,7 +51,9 @@ import javafx.beans.property.DoubleProperty;
     	}
 
 	public void pause(){
-	animation.pause();
+            animation.pause();
+        //Set a new random ball color
+            circle.setFill(Color.rgb((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)));
 	}
 
 	public void increaseSpeed(){
@@ -68,18 +70,54 @@ import javafx.beans.property.DoubleProperty;
 
 	public void moveBall(){
 	//check boundaries
-	if (x < radius || x > getWidth() - radius) {
-		dx *= -1; //reverse directiona
-	}
-	if (y < radius || y > getHeight() - radius) {
-		dy *= -1; //reverse direction
-	}
+            if (x < radius || x > getWidth() - radius) {
+            	dx *= -1; //reverse directiona
+            }
+            if (y < radius || y > getHeight() - radius) {
+            	dy *= -1; //reverse direction
+            }
 
 	//Adjust ball position
-	x += dx;
-	y += dy;
-	circle.setCenterX(x);
-	circle.setCenterY(y);
+            x += dx;
+            y += dy;
+            circle.setCenterX(x);
+            circle.setCenterY(y);
 	}
 
-}
+        public void moveUP(){
+          animation.pause();
+          if (y - 10 > radius) {
+              y -= 10;
+              circle.setCenterY(y);              
+          }
+          animation.play();
+        }
+        
+        public void moveDOWN(){
+          animation.pause();
+          if (y + 10 < getHeight() - radius) {
+              y += 10;
+              circle.setCenterY(y);              
+          }
+          animation.play();
+        }
+        
+        public void moveRIGHT(){
+          animation.pause();
+          if (x + 10 < getWidth() - radius) {
+              x += 10;              
+              circle.setCenterX(x);
+          }
+          animation.play();
+        }
+        
+        public void moveLEFT(){
+          animation.pause();
+          if (x - 10 > radius) {
+            x -= 10;
+            circle.setCenterX(x-10);    
+          }
+          animation.play();
+        }                
+        
+}//class BallPane
