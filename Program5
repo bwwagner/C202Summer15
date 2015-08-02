@@ -1,12 +1,5 @@
 package program5;
 
-/**
- *
- * @author Timothy
- */
-import java.util.Scanner;
-import java.io.*;
-
 /*
  *  C202/I211 Summer 2015
  *  Program5.java
@@ -20,6 +13,13 @@ import java.io.*;
  *                  mispelled, and average comparisons to find words.
  *  
  */
+/**
+ *
+ * @author Timothy
+ */
+import java.util.ArrayList;
+import java.io.*;
+
 public class Program5 {
 
     /**
@@ -52,38 +52,18 @@ public class Program5 {
     }//no args constructor
 
     /**
- * @args none
- * @ensures Output of all counters and calculated averages. Misspelled words are
- * derived from (total words-correct words)
- */
-public static void outputData() {
-                double avgCorrect = 0.0; //average number of comparisons to find a correct word
-                double avgIncorrect = 0.0; //average number of comparisons to determine mispelled
-                if (correctWords > 0) {
-                    avgCorrect = correctComp / correctWords;
-                    avgIncorrect = incorrectComp / (totalWords - correctWords);
-                }
-                //Output
-                System.out.println("Average comparisons to find: " + avgCorrect + "\n  Total Correct: " + correctWords);
-                System.out.println("Average comparisons for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (totalWords - correctWords));
-                System.out.println("Total words: " + totalWords);
-            }//outputData
-
-    
-    
-    
-    
-    
-    /**
      * @param args none
      * @requires access to the source directory and the dictionary in plaintext
      * with one word per line
      */
     public static void main(String[] args) throws IOException {
         Program5 nonStatic = new Program5();
-        String inputfile = "";
-        BinarySearchTree bTree = new BinarySearchTree();
+        binarySTree[] bTree = new binarySTree[26];
         BufferedReader reader = null;
+        
+        for (int i = 0; i < bTree.length; i++) {
+            bTree[i] = new binarySTree<String>();
+        }
 
         try {
             //changed from Scanner to Buffered Reader    
@@ -95,7 +75,7 @@ public static void outputData() {
                 word = word.toLowerCase();
                 //add to array based on first letter of the word
                 int indexByLet = word.charAt(0) - 97; //int value of character to index
-                bTree[indexByLet].add(word);
+                bTree[indexByLet].insert(word);
             }//while
 
             //end dictionary creation
@@ -150,100 +130,109 @@ public static void outputData() {
             System.out.println("Cannot Access File.");
         }//catch
     }//main
-    
- }//class Program5    
 
-    public class binaryTreeNode {
-
-        protected String data;
-        protected binaryTreeNode left, right;
-
-        public binaryTreeNode() {
-            left = null;
-            right = null;
+    /**
+     * @args none
+     * @ensures Output of all counters and calculated averages. Misspelled words
+     * are derived from (total words-correct words)
+     */
+    public void outputData() {
+        double avgCorrect = 0.0; //average number of comparisons to find a correct word
+        double avgIncorrect = 0.0; //average number of comparisons to determine mispelled
+        if (correctWords > 0) {
+            avgCorrect = correctComp / correctWords;
+            avgIncorrect = incorrectComp / (totalWords - correctWords);
         }
+        //Output
+        System.out.println("Average comparisons to find: " + avgCorrect + "\n  Total Correct: " + correctWords);
+        System.out.println("Average comparisons for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (totalWords - correctWords));
+        System.out.println("Total words: " + totalWords);
+    }//outputData
+}//class Program5    
 
-        public binaryTreeNode(String data) {
-            this(data, null, null);
+class binaryTreeNode {
+
+    protected String data;
+    protected binaryTreeNode left, right;
+
+    public binaryTreeNode() {
+        left = null;
+        right = null;
+    }
+
+    public binaryTreeNode(String data) {
+        this(data, null, null);
+    }
+
+    public binaryTreeNode(String data, binaryTreeNode lt, binaryTreeNode rt) {
+        this.data = data;
+        left = lt;
+        right = rt;
+    }
+}
+
+class binarySTree {
+
+    protected binaryTreeNode root = null;
+
+    public binarySTree() {
+
+    }
+
+    public void clear() {
+        root = null;
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    public void insert(String data) {
+        binaryTreeNode t = root;
+        binaryTreeNode temp = root;
+        while (t != null) {
+            if (t.data.compareTo(data) < 0) {
+                t = t.right;
+            } else {
+                t = t.left;
+            }
         }
-
-        public binaryTreeNode(String data, binaryTreeNode lt, binaryTreeNode rt) {
-            this.data = data;
-            left = lt;
-            right = rt;
+        if (root == null) {
+            root = new binaryTreeNode(data);
+        } else if (t.data.compareTo(data) < 0) {
+            t.right = new binaryTreeNode(data);
+        } else {
+            t.left = new binaryTreeNode(data);
         }
+    }
 
-        public class binarySTree {
+    public void inorder() {
+        inorder(root);
+    }
 
-            protected binaryTreeNode root = null;
+    private void inorder(binaryTreeNode t) {
+        if (t != null) {
+            inorder(t.left);
+            System.out.print(t.data + " ");
+            inorder(t.right);
+        }
+    }
 
-            public binarySTree() {
-
-            }
-
-            public void clear() {
-                root = null;
-            }
-
-            public boolean isEmpty() {
-                return root == null;
-            }
-
-            public void insert(String data) {
-                binarySTree t = root;
-                temp t = next;
-                while (t != null) {
-                    if (t.data.compareTo(data) < 0) {
-                        t = t.right;
-                    } else {
-                        t = t.left;
-                    }
+    public void bFrist() {
+        binaryTreeNode t = root;
+        ArrayList queue = new ArrayList();
+        if (t != null) {
+            queue.add(t);
+            while (isEmpty()) {
+                t = t.left;
+                System.out.println(t.data + " ");
+                if (t.left != null) {
+                    queue.add(t.left);
                 }
-                if (root == null) {
-                    root = new binaryTreeNode(data);
-                } else if (t.data.compareTo(data) < 0) {
-                    t.right = new binaryTreeNode(data);
-                } else {
-                    t.left = new binaryTreeNode(data);
-                }
-                    
-
-                
-
-            public void inorder() {
-                inorder(root);
-            }
-
-            private void inorder(binaryTreeNode t) {
-                if (t != null) {
-                    inorder(t.left);
-                    System.out.print(t.data + " ");
-                    inorder(t.right);
-                }
-            }
-
-            public void bFrist() {
-                binaryTreeNode t = root;
-                Queue queue = new Queue();
-                if (t != null) {
-                    queue.enqueue(t);
-                    while (isEmpty()) {
-                        t = t.hasNext();
-                        System.out.println(t.data + " ");
-                        if (t.left != null) {
-                            queue.enqueue(t.left);
-                        }
-                        if (t.right != null) {
-                            queue.enqueue(t.right);
-                        }
-                    }
+                if (t.right != null) {
+                    queue.add(t.right);
                 }
             }
         }
     }
 }
-
-
-   
-
-
