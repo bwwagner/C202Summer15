@@ -1,0 +1,133 @@
+/*
+ Branden Wagner
+ C202-3183
+ Dr H
+ 08/06/15
+*/
+
+public class MyDeque<E>{
+    private Node<E> head;
+    private Node<E> tail;
+    private int size;
+    
+    MyDeque(){
+        head=null;
+        tail=null;
+        size=0;
+    }//default constructor
+    
+    public boolean empty(){
+        return size==0;
+    }
+    
+    public void addFirst(E e){
+        Node<E> first = new Node<E>(e);
+        if (empty()){
+            head=tail=first;
+            size++;
+            
+        }
+        else{
+            first.next=head;
+            head = first;
+            size++;
+        }
+    }
+    
+    public void addLast(E e){
+        Node<E> last = new Node<E>(e);
+        if (empty()){
+            tail=last;
+            head=tail;
+            size++;
+        }
+        else{
+            tail.next=last;
+            tail=last;
+            size++;
+        }
+    }
+    
+    public E pollFirst(){
+        if(empty()){
+            return null;
+        }
+        else{
+            Node<E> data = head;
+            head = head.next;
+            size--;
+            if (head == null)
+                tail = null;
+            return data.element;
+        }
+    }
+    
+    public E pollLast(){
+        if (empty()) {
+            return null;
+        }
+        else if (size == 1) {
+            Node<E> temp = head;
+            head = tail = null;
+            size = 0;
+            return temp.element;
+        } else {
+            Node<E> newTail = head;
+            for (int i = 0; i < size - 2; i++) {
+                newTail = newTail.next;
+            }
+            Node<E> temp = tail;
+            tail = newTail;
+            tail.next = null;
+            size--;
+            return temp.element;
+        }
+    }
+    
+    public E peekFirst(){
+        if (empty()) return null;
+        else return head.element;
+    }
+    
+    public E peekLast(){
+        if (empty()) return null;
+        else return tail.element;
+    }
+    
+    public String toString(){
+        String s ="";
+        Node read = head;
+        for(int i = 0; i < this.size; i++){
+            s += read.element + " ";
+            read = read.next;
+        }
+        return s;
+    }
+    
+    
+    class Node<E> {
+        E element;
+        Node<E> next;
+        
+        public Node(E element){
+            this.element = element;
+        }//constructor
+    }//class Node
+}//class MyDeque
+
+
+/*
+ 
+ OUTPUT
+ 
+ 25 45 5 15 51 53 65 57 85
+ Peek First 25
+ Peek Last 85
+ Removed First
+ Peek First 45
+ Removed Last
+ Peek Last 57
+ 45 5 15 51 53 65
+ null
+ */
+
