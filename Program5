@@ -158,3 +158,59 @@ public class Program5 {
     }//outputData
     
 }//class Program5    
+
+/*
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 0.0
+  Total Correct: 937492
+Average comparisons for mispelled: 0.0
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 631221002
+BUILD SUCCESSFUL (total time: 1 second)
+
+=======+OUTPUT+=======
+
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 0.0
+  Total Correct: 937492
+Average comparisons for mispelled: 0.0
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 663527571
+BUILD SUCCESSFUL (total time: 1 second)
+
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 0.0
+  Total Correct: 937492
+Average comparisons for mispelled: 0.0
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 676498164
+BUILD SUCCESSFUL (total time: 1 second)
+
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 0.0
+  Total Correct: 937492
+Average comparisons for mispelled: 0.0
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 655610716
+BUILD SUCCESSFUL (total time: 0 seconds)
+
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 0.0
+  Total Correct: 937492
+Average comparisons for mispelled: 0.0
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 641215090
+BUILD SUCCESSFUL (total time: 0 seconds)
+
+=======+OUTPUT+=======
+*/
