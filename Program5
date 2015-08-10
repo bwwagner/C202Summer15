@@ -8,46 +8,47 @@ package program5;
  *  Purpose      : Program 5
  *                  Use a random order plaintext dictionary input file to fill 
  *                  an array with custom singly-linked list objects. 
- *                  Use a binarySearchTree to spellcheck an input file 
+ *                  Use a binary search tree to spellcheck an input file 
  *                  oliver.txt, then output data on: words found,                     
  *                  mispelled, and average comparisons to find words.
  *  
  */
+
+import java.io.*;
+import program5.BinarySearchTree.TreeNode;
+
 /**
  *
  * @author Branden Wagner
  */
-import java.util.ArrayList;
-import java.io.*;
-
 public class Program5 {
 
     /**
      * long to keep track of the total comparisons made to find correctly
      * spelled words
      */
-    protected static long correctComp = 0;
+    protected long correctComp = 0;
 
     /**
      * long to keep track of the total comparisons for incorrectly spelled words
      */
-    protected static long incorrectComp = 0;
+    protected long incorrectComp = 0;
 
     /**
      * integer to keep track of the total words found in the input file,
      * oliver.txt
      */
-    public static int totalWords = 0;
+    public int totalWords = 0;
 
     /**
      * integer to keep track of the number of correctly spelled words
      */
-    public static int correctWords = 0;
+    public int correctWords = 0;
 
     /**
      * long to keep track of runtime of the algorithm in nanoseconds
-     */    
-    public static long elapsedTime = 0;
+     */
+    public long elapsedTime = 0;
 
     /**
      * Default constructor, no arguments
@@ -58,6 +59,7 @@ public class Program5 {
 
     /**
      * @param args none
+     * @throws java.io.IOException
      * @requires access to the source directory and the dictionary in plaintext
      * with one word per line
      */
@@ -65,7 +67,7 @@ public class Program5 {
         Program5 nonStatic = new Program5();
         BinarySearchTree[] dictionary = new BinarySearchTree[26];
         BufferedReader reader = null;
-        
+
         for (int i = 0; i < dictionary.length; i++) {
             dictionary[i] = new BinarySearchTree<String>();
         }
@@ -102,7 +104,7 @@ public class Program5 {
             char let;
             String str = ""; //word to be processed
             int n;
-            
+
             long startTime = System.nanoTime();
 
             while ((n = inf.read()) != -1) {
@@ -116,19 +118,17 @@ public class Program5 {
                 if ((Character.isWhitespace(let) || let == '-') && !str.isEmpty()) {
                     //determine if the linked list array contains the string and increment counters
                     //long comps = dictionary[str.charAt(0) - 97].containsCount(str);
-                    if (dictionary[str.charAt(0) - 97].search(str)) {
-                        //correctComp += comps;
-                        totalWords++;
-                        correctWords++;
+                    if (nonStatic.searchCount(dictionary[str.charAt(0) - 97], str)) { 
+                        nonStatic.totalWords++;
+                        nonStatic.correctWords++;
                     } else {
-                        //incorrectComp += comps;
-                        totalWords++;
+                        nonStatic.totalWords++;
                     }
                     //insert word to a data structure here
                     str = "";
                 }//if 
             }//while read
-            elapsedTime = System.nanoTime() - startTime;
+            nonStatic.elapsedTime = System.nanoTime() - startTime;
             inf.close();
             //Output counters with labels
             nonStatic.outputData();
@@ -146,70 +146,97 @@ public class Program5 {
     public void outputData() {
         double avgCorrect = 0.0; //average number of comparisons to find a correct word
         double avgIncorrect = 0.0; //average number of comparisons to determine mispelled
-        if (correctWords > 0) {
-            avgCorrect = correctComp / correctWords;
-            avgIncorrect = incorrectComp / (totalWords - correctWords);
+        if (this.correctWords > 0) {
+            avgCorrect = ((double)this.correctComp / this.correctWords);
+            avgIncorrect = ((double)this.incorrectComp / (this.totalWords - this.correctWords));
         }
         //Output
-        System.out.println("Average comparisons to find: " + avgCorrect + "\n  Total Correct: " + correctWords);
-        System.out.println("Average comparisons for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (totalWords - correctWords));
-        System.out.println("Total words: " + totalWords);
-        System.out.println("Runtime(ns): " + elapsedTime);
+        System.out.println("Average comparisons to find: " + avgCorrect + "\n  Total Correct: " + this.correctWords);
+        System.out.println("Average comparisons for mispelled: " + avgIncorrect + "\n  Total Mispelled: " + (this.totalWords - this.correctWords));
+        System.out.println("Total words: " + this.totalWords);
+        System.out.println("Runtime(ns): " + this.elapsedTime);
     }//outputData
-    
+
+    /**
+     * Returns true if the element is in the tree and updates comparison counts
+     * @param tree BinarySearchTree to be searched
+     * @param key  String to be found in the tree
+     * @return true if the element is in the tree
+     */
+    public boolean searchCount(BinarySearchTree tree, String key) {
+        TreeNode<String> current = tree.root; // Start from the root
+        int comparisons = 0;
+        while (current != null) {
+            if (key.compareTo(current.element) < 0) {
+                comparisons++;
+                current = current.left;
+            } else if (key.compareTo(current.element) > 0) {
+                comparisons++;
+                current = current.right;
+            } else // element matches current.element
+            {
+                this.correctComp += comparisons;
+                return true; // Element is found
+            }
+        }
+        this.incorrectComp += comparisons;
+        return false;
+    }//searchCount
+
 }//class Program5    
+
 
 /*
 =======+OUTPUT+=======
 run:
-Average comparisons to find: 0.0
+Average comparisons to find: 15.347479231822778
   Total Correct: 937492
-Average comparisons for mispelled: 0.0
+Average comparisons for mispelled: 10.397654077001903
   Total Mispelled: 54648
 Total words: 992140
-Runtime(ns): 631221002
-BUILD SUCCESSFUL (total time: 1 second)
+Runtime(ns): 542892771
+BUILD SUCCESSFUL (total time: 0 seconds)
 
 =======+OUTPUT+=======
 
 =======+OUTPUT+=======
 run:
-Average comparisons to find: 0.0
+Average comparisons to find: 15.347479231822778
   Total Correct: 937492
-Average comparisons for mispelled: 0.0
+Average comparisons for mispelled: 10.397654077001903
   Total Mispelled: 54648
 Total words: 992140
-Runtime(ns): 663527571
-BUILD SUCCESSFUL (total time: 1 second)
-
-=======+OUTPUT+=======
-run:
-Average comparisons to find: 0.0
-  Total Correct: 937492
-Average comparisons for mispelled: 0.0
-  Total Mispelled: 54648
-Total words: 992140
-Runtime(ns): 676498164
-BUILD SUCCESSFUL (total time: 1 second)
-
-=======+OUTPUT+=======
-run:
-Average comparisons to find: 0.0
-  Total Correct: 937492
-Average comparisons for mispelled: 0.0
-  Total Mispelled: 54648
-Total words: 992140
-Runtime(ns): 655610716
+Runtime(ns): 552330120
 BUILD SUCCESSFUL (total time: 0 seconds)
 
 =======+OUTPUT+=======
 run:
-Average comparisons to find: 0.0
+Average comparisons to find: 15.347479231822778
   Total Correct: 937492
-Average comparisons for mispelled: 0.0
+Average comparisons for mispelled: 10.397654077001903
   Total Mispelled: 54648
 Total words: 992140
-Runtime(ns): 641215090
+Runtime(ns): 576588310
+BUILD SUCCESSFUL (total time: 0 seconds)
+
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 15.347479231822778
+  Total Correct: 937492
+Average comparisons for mispelled: 10.397654077001903
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 582770740
+BUILD SUCCESSFUL (total time: 0 seconds)
+
+=======+OUTPUT+=======
+run:
+Average comparisons to find: 15.347479231822778
+  Total Correct: 937492
+Average comparisons for mispelled: 10.397654077001903
+  Total Mispelled: 54648
+Total words: 992140
+Runtime(ns): 557751890
 BUILD SUCCESSFUL (total time: 0 seconds)
 
 =======+OUTPUT+=======
